@@ -1,9 +1,10 @@
 import sys, os, dlib, glob
-from skimage import io
 import cv2
 import imutils
 import numpy as np
+from skimage import io
 from matplotlib import pyplot as plt
+from PIL import ImageFont, ImageDraw, Image
 
 # 取得dlib預設的臉部偵測器
 detector = dlib.get_frontal_face_detector()
@@ -89,8 +90,14 @@ while(cap.isOpened()):
                 rec_name = cd_sorted[0][0]
             else:
                 rec_name = "No Data"
-        # 標示辨識的人名
-        cv2.putText(frame, rec_name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+        # 標示辨識的人名(中文)
+        imgPil = Image.fromarray(frame)
+        font = ImageFont.truetype("C:/Windows/Fonts/msjh.ttc", 20)	
+        draw = ImageDraw.Draw(imgPil)
+        draw.text((x1, y1-20), rec_name,font=font, fill=(255,255,255))
+        frame = np.array(imgPil)
+        # 標示辨識的人名(只能標示s英文)
+        # cv2.putText(frame, rec_name, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
      # 顯示結果
     cv2.imshow("Face Detection", frame)
